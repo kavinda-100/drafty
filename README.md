@@ -10,7 +10,14 @@ Drafty is a Next.js application with email and password authentication powered b
 
 ## Set up the project
 
-1. Install dependencies from the project root:
+1. Clone the repository and navigate to the project root:
+
+   ```bash
+   git clone https://github.com/kavinda-100/drafty.git
+   cd drafty
+   ```
+
+2. Install dependencies from the project root:
 
    ```bash
    pnpm install
@@ -18,13 +25,13 @@ Drafty is a Next.js application with email and password authentication powered b
 
    The install command generates the Prisma client. If pnpm asks you to approve dependency build scripts, review the prompt and project `pnpm-workspace.yaml` configuration.
 
-2. Create an empty PostgreSQL database named `drafty`, or use an existing development database. For example, if your local PostgreSQL user can create databases:
+3. Create an empty PostgreSQL database named `drafty`, or use an existing development database. For example, if your local PostgreSQL user can create databases:
 
    ```bash
    createdb drafty
    ```
 
-3. Create a `.env` file in the project root:
+4. Create a `.env` file in the project root:
 
    ```env
    DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drafty"
@@ -40,7 +47,7 @@ Drafty is a Next.js application with email and password authentication powered b
 
    Keep `.env` private; it is excluded from Git. For a hosted database, use the provider's connection URL and SSL settings.
 
-4. Push the Prisma schema to the development database and generate the client:
+5. Push the Prisma schema to the development database and generate the client:
 
    ```bash
    pnpm db:push
@@ -48,7 +55,7 @@ Drafty is a Next.js application with email and password authentication powered b
 
    This changes the schema of the database specified by `DATABASE_URL`. Use a development database and review schema changes before applying them to any database containing data.
 
-5. Optionally seed the development accounts:
+6. Optionally seed the development accounts:
 
    ```bash
    pnpm db:seed

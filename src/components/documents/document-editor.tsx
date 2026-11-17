@@ -123,7 +123,7 @@ export function DocumentEditor({ id, initialTitle, initialContent }: { id: strin
       </form>
       {titleError && <p role="alert" className="mt-2 text-sm text-destructive">{titleError}</p>}
       <div className="mt-8 rounded-xl border bg-card">
-        <div className="flex flex-wrap gap-1 border-b p-2" role="toolbar" aria-label="Text formatting">{controls.map(({ label, icon: Icon, active, run }) => <Button key={label} type="button" size="icon" variant={active ? "secondary" : "ghost"} aria-label={label} aria-pressed={!!active} title={label} disabled={!editor} onClick={run}><Icon /></Button>)}</div>
+        <div className="flex flex-wrap gap-1 border-b p-2" role="toolbar" aria-label="Text formatting">{controls.map(({ label, icon: Icon, active, run }) => <Button key={label} type="button" size="icon" variant={active ? "secondary" : "ghost"} aria-label={label} aria-pressed={!!active} title={label} disabled={!editor} onMouseDown={(event) => event.preventDefault()} onClick={run}><Icon /></Button>)}</div>
         <EditorContent editor={editor} />
       </div>
     </main>
