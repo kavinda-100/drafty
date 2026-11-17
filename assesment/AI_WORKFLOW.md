@@ -8,7 +8,7 @@ Rather than treating AI as a code-generation tool alone, I used it as an enginee
 
 ## 2. AI Tools Used
 
-- **Coding Agent:** Codex, GitHub Copilot, JetBrains Junie Lite
+- **Coding Agent:** Codex, JetBrains Junie Lite
 - **Planning and Research:** ChatGPT
 - **Development Environment:** 
   - JetBrains IDEs (WebStorm)
@@ -27,52 +27,71 @@ I followed a structured, iterative workflow:
 
 This approach allowed me to delegate repetitive implementation tasks while maintaining control over engineering decisions.
 
-## 4. Architectural Decisions
+### Example of Iterative Development
 
-For this assignment, I selected:
+- prompt:
+```text
+Implement email password authentication flow using better auth and add login and registration screen with required functionality. keep the screen  minimal. no need dark mode. white background and form in middle. use zod for validation along with shandcn form. add sensory shadcn components. after registration users redirect to home with small heder on top logo in the left (Drafty) and logout button right. any authenticated users not able to go to home or any route. so protect the routes.
+```
 
-- **Next.js and TypeScript** for the full-stack application.
-- **Better Auth** for email/password authentication, avoiding unnecessary custom authentication logic.
-- **Prisma and PostgreSQL** for persistent application data.
-- **Tiptap** for rich-text editing instead of building an editor from scratch.
+- Agent Plan:
+```md
+# Email and Password Authentication
 
-These technologies provided established building blocks, allowing more time to focus on document workflows, sharing, and usability.
+## Summary
 
-## 5. Where AI Accelerated Development
+Add Better Auth registration, login, and logout to the existing Next.js and Prisma app. Use minimal, centered forms on a white background, and protect the home page and future application routes.
 
-AI assisted with the following tasks:
+## Implementation
 
-- Translating feature requirements into implementation plans.
-- Generating application components and backend logic.
-- Connecting authentication, database models, and application workflows.
-- [Add specific debugging or testing examples after completion.]
+- Mount Better Auth’s Next.js API handler and add a client for registration, login, and logout. Reuse the existing Prisma schema and email/password configuration.
+- Add /login and /register pages with links between them. Registration collects name, email, and password; login collects email and password.
+- Use React Hook Form, Zod, and shadcn form components for accessible field validation. Show authentication errors and disable submission while a request is pending.
+- Redirect users to / after successful registration or login. Redirect authenticated users away from the auth pages to /.
+- Add a default route gate that redirects unauthenticated page requests to /login, while allowing the auth pages, Better Auth endpoints, and required static assets. Validate the session on the server before rendering protected content; protected API handlers must also validate sessions and return 401 when unauthenticated.
+- Replace the starter home page with a minimal layout and a header containing Drafty on the left and Logout on the right. Logout ends the session and redirects to /login.
+- Update setup documentation with the database, Better Auth secret, and application URL configuration.
 
-This reduced the amount of repetitive coding required within the assessment's time constraints.
+## Test Plan
 
-## 6. Human Review and Corrections
+- Verify registration creates a session and opens home; verify login works after logout.
+- Check invalid inputs, duplicate registration, incorrect credentials, and request failures display useful errors.
+- Verify unauthenticated access to home and other protected routes redirects to login, including with an expired or invalid session cookie.
+- Verify authenticated users can access home, auth pages redirect to home, and logout prevents subsequent access.
+- Run lint and production build, then exercise the flow against a configured PostgreSQL database.
+
+## Assumptions
+
+- Registration signs users in immediately; email verification and password reset are outside this request.
+- The existing Prisma models are retained unless Better Auth compatibility checks reveal a required schema change.
+- Future protected API handlers will perform their own server-side session validation in addition to the route gate.
+```
+
+## 4. Human Review and Corrections
 
 I did not automatically accept every AI recommendation. I reviewed proposed solutions before implementation and requested adjustments when necessary.
 
 **Example of an AI recommendation I changed or rejected:**
 
-- Initial proposal: [Describe the agent's original suggestion.]
-- My concern: [Explain the issue or tradeoff.]
-- Change requested: [Describe your correction.]
-- Reason: [Explain why the revised approach was better.]
+- Initial proposal: Agent finish implementing the authentication flow and try to run the dev server.
+- My concern: Need to ensure the implementation pass the test plan and verify the flow works as expected.
+- Change requested: Ask the agent to implement the flow and provide a test plan and implement it.
+- Reason: I wanted to ensure the implementation was correct and met the requirements before running the dev server.
 
-## 7. Verification and Quality Assurance
+## 5. Verification and Quality Assurance
 
 I verified the implementation using:
 
-- [TypeScript and build checks — include only if performed.]
-- [Automated tests and actual results.]
-- [Manual testing of authentication, document editing, and persistence.]
-- [Manual testing of sharing and authorization.]
-- [Deployment verification.]
+- [x] TypeScript and build checks — include only if performed.
+- [x] Automated tests and actual results.
+- [x] Manual testing of authentication, 
+- [ ] Manual testing of document editing, and persistence.
+- [ ] Manual testing of sharing and authorization.
+- [x] Deployment verification.
 
 Issues discovered during testing were investigated and corrected through additional iterations with the agent.
 
-## 8. Reflection
+## 6. Reflection
 
 This workflow allowed me to prioritize problem-solving, architecture, and product decisions while using AI to accelerate implementation.
 

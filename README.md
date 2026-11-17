@@ -93,3 +93,9 @@ pnpm test
 For watch mode, use `pnpm test:watch`. The tests connect to the database in `DATABASE_URL`, create and remove a temporary user, and create and revoke sessions for the two seeded accounts. They require the seeded accounts to have the passwords listed above.
 
 Run the linter with `pnpm lint`. If the generated Prisma client needs to be refreshed separately, run `pnpm db:generate`.
+
+## Documents
+
+After signing in, create a document from the dashboard and open it to write. Use the formatting toolbar for headings, bold, italic, underline, and lists. Content saves automatically after you pause typing; the editor shows whether it is saving, saved, or needs a retry. Rename a document using the title field and Rename button. Documents are private to their owner.
+
+After pulling schema changes, run `pnpm db:push` against your development database before starting the app. Wait for the saved indicator before closing or leaving a document.
