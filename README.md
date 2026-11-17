@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Drafty
 
-## Getting Started
+Drafty is a Next.js application with email and password authentication powered by Better Auth and PostgreSQL. Prisma manages the database schema.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 24 or later.
+- pnpm 12.2.1, as specified in `package.json`.
+- A PostgreSQL database, running locally or hosted remotely, and a connection URL for a user with permission to create and update tables.
+
+## Set up the project
+
+1. Install dependencies from the project root:
+
+   ```bash
+   pnpm install
+   ```
+
+   The install command generates the Prisma client. If pnpm asks you to approve dependency build scripts, review the prompt and project `pnpm-workspace.yaml` configuration.
+
+2. Create an empty PostgreSQL database named `drafty`, or use an existing development database. For example, if your local PostgreSQL user can create databases:
+
+   ```bash
+   createdb drafty
+   ```
+
+3. Create a `.env` file in the project root:
+
+   ```env
+   DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drafty"
+   BETTER_AUTH_SECRET="replace-with-a-unique-random-secret"
+   BETTER_AUTH_URL="http://localhost:3000"
+   ```
+
+   | Variable | Description |
+   | --- | --- |
+   | `DATABASE_URL` | PostgreSQL connection URL, including the database name and any required SSL parameters. Replace `USER` and `PASSWORD` with your database credentials. URL-encode special characters in the credentials. |
+   | `BETTER_AUTH_SECRET` | Secret used by Better Auth. Generate a unique value with `openssl rand -base64 32`. |
+   | `BETTER_AUTH_URL` | The application's base URL. Use `http://localhost:3000` locally and the actual application URL in production. |
+
+   Keep `.env` private; it is excluded from Git. For a hosted database, use the provider's connection URL and SSL settings.
+
+4. Push the Prisma schema to the development database and generate the client:
+
+   ```bash
+   pnpm db:push
+   ```
+
+   This changes the schema of the database specified by `DATABASE_URL`. Use a development database and review schema changes before applying them to any database containing data.
+
+5. Optionally seed the development accounts:
+
+   ```bash
+   pnpm db:seed
+   ```
+
+## Run the app
+
+Start the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Register a new account or sign in with a seeded account. Registration signs the user in and redirects to the home page. Unauthenticated visitors are redirected to login.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run a production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+## Development test users
 
-To learn more about Next.js, take a look at the following resources:
+`pnpm db:seed` creates these accounts if their email addresses do not already exist:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Email | Password |
+| --- | --- |
+| `bod@gmail.com` | `DraftyBod123!` |
+| `jane@gmail.com` | `DraftyJane123!` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The seed skips existing accounts and does not change their passwords. These credentials are public and are intended only for a development database.
 
-## Deploy on Vercel
+## Tests and checks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+After setting up and seeding the development database, run the Vitest integration tests:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm test
+```
+
+For watch mode, use `pnpm test:watch`. The tests connect to the database in `DATABASE_URL`, create and remove a temporary user, and create and revoke sessions for the two seeded accounts. They require the seeded accounts to have the passwords listed above.
+
+Run the linter with `pnpm lint`. If the generated Prisma client needs to be refreshed separately, run `pnpm db:generate`.
