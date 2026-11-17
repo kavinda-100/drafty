@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { FileText, Plus } from "lucide-react";
+import { ImportDocument } from "@/components/documents/import-document";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { Button } from "@/components/ui/button";
 import { createDocument } from "@/app/documents/actions";
@@ -28,7 +29,7 @@ async function Dashboard() {
       <main className="mx-auto max-w-4xl px-6 py-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div><p className="text-sm text-muted-foreground">Your workspace</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">Documents</h1><p className="mt-2 text-sm text-muted-foreground">A place for your ideas, {session.user.name}.</p></div>
-          <form action={createDocument}><Button type="submit"><Plus data-icon="inline-start" />New document</Button></form>
+          <div className="flex flex-wrap items-start gap-2"><ImportDocument /><form action={createDocument}><Button type="submit"><Plus data-icon="inline-start" />New document</Button></form></div>
         </div>
         <div className="mt-10 border-t">
           {documents.length === 0 ? <p className="py-10 text-sm text-muted-foreground">No documents yet. Create one to start writing.</p> : (

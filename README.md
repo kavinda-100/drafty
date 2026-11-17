@@ -99,3 +99,7 @@ Run the linter with `pnpm lint`. If the generated Prisma client needs to be refr
 After signing in, create a document from the dashboard and open it to write. Use the formatting toolbar for headings, bold, italic, underline, and lists. Content saves automatically after you pause typing; the editor shows whether it is saving, saved, or needs a retry. Rename a document using the title field and Rename button. Documents are private to their owner.
 
 After pulling schema changes, run `pnpm db:push` against your development database before starting the app. Wait for the saved indicator before closing or leaving a document.
+
+### Import a text file
+
+From the documents dashboard, select **Import Document** and choose a non-empty UTF-8 `.txt` file no larger than 1 MB (1,048,576 bytes). Drafty creates a document named after the file and opens it for editing. Line breaks are imported as paragraphs; formatting, other file types, and files containing null characters are not supported. The original file is not stored. The filename before `.txt` must contain 1–200 characters.
