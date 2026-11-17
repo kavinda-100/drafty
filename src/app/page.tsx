@@ -1,9 +1,18 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { auth } from "@/lib/auth";
 
-export default async function Home() {
+export default function Home() {
+  return (
+    <Suspense fallback={<p className="px-6 py-10">Loading your dashboard…</p>}>
+      <Dashboard />
+    </Suspense>
+  );
+}
+
+async function Dashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
